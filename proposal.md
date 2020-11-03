@@ -6,12 +6,8 @@ a new and reasonable fairy tale after the model trains on a large collection of 
 however, the fairy tale that is generated might not be perfect in the aspect of storytelling. We are also hoping to incorporate author-specific features and use
 the model to generate fairy tales based on the writing styles of famous fairy tale authors such as the Brothers Grimm and Charles Perrault. We will then analyze
 the accuracy of the model and consider the similarities and differences between the texts that it generates for different authors.  
-	For our project, we are planning on utilizing a few different datasets. Project Gutenberg provides access to many different original fairy tales, and there are
-also a few fairy tale datasets available on Kaggle. Since we are planning on generating text in the style of different authors, we will most likely use a
-combination of both data from Kaggle and Project Gutenberg. For a baseline comparison and for overall evaluation, we will use perplexity to determine how well
-the model is doing. For the baseline, we will examine the perplexity of randomized output from the "bag of words" feature, using tokens extracted from the
-datasets. This baseline comparison will give us a general understanding of how well our model is doing and how intelligent it is. In addition to examining how
-the model's perplexity score changes as it is tweaked, our team will eventually manually examine output and consider its reasonability.
+	For our project, we are planning on utilizing a few different datasets. Project Gutenberg provides access to many different original fairy tales, and there are also a few fairy tale datasets available on Kaggle. Since we are planning on generating text in the style of different authors, we will most likely use a
+combination of both data from Kaggle and Project Gutenberg. We will use a GPT-2 model in order to generate the text, and train it specifically on the fairy tale data. For a baseline comparison and for overall evaluation, we will use perplexity to determine how well the model is doing. For the baseline, we will examine the perplexity of randomized output from the "bag of words" feature, using tokens extracted from the datasets. This baseline comparison will give us a general understanding of how well our model is doing and how intelligent it is. In addition to examining how the model's perplexity score changes as it is tweaked, our team will eventually manually examine output and consider its reasonability.
 
 <b>Preliminary schedule:</b>   
 Week 10: Finalize proposal and complete research for suitable datasets and possible models (all)   
