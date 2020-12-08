@@ -4,6 +4,7 @@ import re
 """
 Pre-process Charles Perrault data, basically gets rid of lines with image annotations.
 """
+
 # perrault_raw = open('data/perrault_raw.txt', 'r')
 # perrault_lines = ''.join(perrault_raw.readlines())
 # perrault_lines = re.sub(r'(?m)^\[\d+\]', '', perrault_lines).split('\n')
@@ -14,7 +15,8 @@ Pre-process Charles Perrault data, basically gets rid of lines with image annota
 """
 Process data file into lines and split 80:20 for train:test
 """
-# author_data = pd.read_csv('author_data.txt', sep=r' - (?={)', engine='python', header=None, names=['Line'])
+
+# author_data = pd.read_csv(author_data, sep=r' - (?={)', engine='python', header=None, names=['Line'])
 # author_lines = author_data['Line'].tolist()
 # train_cutoff_author = int(len(author_lines) * 0.8)
 
@@ -24,6 +26,23 @@ Process data file into lines and split 80:20 for train:test
 
 # with open('author_specific_test.txt', 'w') as f:
 #   for line in author_lines[-train_cutoff_author:]:
+#     f.writelines(line + '\n') 
+
+"""
+Concatenate fairy tale datasets into one combined text file. 
+"""
+
+# files = ["data/bfb.txt", "data/japanese_tales.txt"]
+# with open('data/combined.txt', 'w') as outfile:
+#     for file in files:
+#         with open(file) as infile:
+#             outfile.write(infile.read())
+
+# Making sure parser works for combined.txt:
+# data = pd.read_csv('data/combined.txt', sep=r' - (?={)', engine='python', header=None, names=['Line'])
+# lines = data['Line'].tolist()
+# with open('temp.txt', 'w') as f:
+#   for line in lines:
 #     f.writelines(line + '\n') 
 
 """

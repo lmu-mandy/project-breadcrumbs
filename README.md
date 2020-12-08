@@ -32,11 +32,17 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-The goal of the project is to create a text generation model that will learn from existing fairy tales and auto-generate new and plausible fairy tale texts
+The goal of the project is to create a text generation model that will learn from existing fairy tales and auto-generate new and plausible fairy tale texts.
 
-### Built With
+### Data and Models
 
 * GPT-2
+* Data sets used:
+    * [Hans Christian Andersen Tales](http://www.gutenberg.org/ebooks/27200)
+    * [Perrault Fairy Tales](http://www.gutenberg.org/files/29021/29021-h/29021-h.htm)
+    * [Grimms' Fairy Tales](https://www.gutenberg.org/files/2591/2591-h/2591-h.htm)
+    * [The Blue Fairy Book](http://www.gutenberg.org/files/503/503-h/503-h.htm) (Mixed Authors)
+    * [Japanese Fairy Tales](http://www.gutenberg.org/files/4018/4018-h/4018-h.htm)
 
 <!-- INSTALLATION -->
 ## Installation
@@ -45,20 +51,19 @@ The goal of the project is to create a text generation model that will learn fro
    ```sh
    git clone https://github.com/lmu-mandy/project-breadcrumbs.git
    ```
-2. Navigate to either author_specific_fine_tuned_model.py or
-general_then_author_specific_fine_tuned_model.py
-3. Check out and click one of the google collab links at the top of either file to enter the google collab
-4. Make a copy of either google collab
-5. Navigate to the files section of copy google collab and copy all the txt files from data folder from the cloned repo and insert them into the files section of the copied google collab
+2. Navigate to either `author_specific_fine_tuned_model.py` or `general_then_author_specific_fine_tuned_model.py`.
+3. Check out and click one of the Google Colab links at the top of either file to enter the Google Colab.
+4. Make a copy of either Google Colab.
+5. Navigate to the files section of the Google Colab copy and copy all the `.txt` files in the `data` folder from the cloned repo into the files section.
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Navigate to the runtime button dropdown and click the run all button to generate some fairy tail text.
+Navigate to the runtime button dropdown and click the `Run all` button to generate some fairy tale text.
 
-If you want to vary the authors used, uncomment the commented lines of code in the preprocessing section.
+If you want to vary the author used, uncomment the relevant line of code in the author-selection section. (Cell 3 in Google Colab, lines 29-31 in the generated Python files).
 
-If you want to vary the prompts used, change the prompts in the fairy tale text generation section.
+If you want to vary the prompts used, change the prompts in the fairy tale text generation section. (Cell 6 in Google Colab).
 
 <!-- LICENSE -->
 ## License
