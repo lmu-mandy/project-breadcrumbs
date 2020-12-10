@@ -13,8 +13,15 @@ Pre-process Charles Perrault data, basically gets rid of lines with image annota
 #         if line: f.writelines(line + '\n')
 
 """
-Process data file into lines and split 80:20 for train:test
+Programatically create author file based on selected author. 
+Also process data file into lines and split 80:20 for train:test.
 """
+# author = "grimms"
+# author = "andersen"
+# author = "perrault"
+
+# authors_to_data = {"grimms": 'grimms.txt', "andersen": 'andersen.txt', "perrault": 'perrault.txt'}
+# author_data = authors_to_data[author]
 
 # author_data = pd.read_csv(author_data, sep=r' - (?={)', engine='python', header=None, names=['Line'])
 # author_lines = author_data['Line'].tolist()
@@ -57,3 +64,28 @@ Concatenate author-specific data set with general fairy tale data.
 #     for author in authors_to_data.values():
 #         with open(author) as infile:
 #             outfile.write(infile.read())
+
+"""
+Calculate vocab size for each author.
+"""
+
+from collections import Counter
+
+perrault_text = open('data/perrault.txt', 'r')
+andersen_text = open('data/andersen.txt', 'r')
+grimms_text = open('data/grimms.txt', 'r')
+
+perrault_lines = ''.join(perrault_text.readlines()).split()
+andersen_lines = ''.join(andersen_text.readlines()).split()
+grimms_lines = ''.join(grimms_text.readlines()).split()
+
+perrault_text.close()
+andersen_text.close()
+grimms_text.close()
+
+perrault_vocab_size = len(Counter(perrault_lines))
+print("Perrault vocab size: " + str(perrault_vocab_size))
+andersen_vocab_size = len(Counter(andersen_lines))
+print("Andersen vocab size: " + str(andersen_vocab_size))
+grimms_vocab_size = len(Counter(grimms_lines))
+print("Grimms vocab size: " + str(grimms_vocab_size))
