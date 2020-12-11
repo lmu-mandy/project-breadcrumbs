@@ -61,7 +61,7 @@ The goal of the project is to create a text generation model that will learn fro
 
 Navigate to the runtime button dropdown and click the `Run all` button to generate some fairy tale text.
 
-If you want to vary the author used, uncomment the relevant line of code in the author-selection section. (Cell 3 in Google Colab, lines 29-31 in the generated Python files).
+You'll be prompted in Cell 3 of the Colab to select one author out of Perrault, Grimms, and Andersen.
 
 If you want to vary the prompts used, change the prompts in the fairy tale text generation section. (Cell 6 in Google Colab).
 
