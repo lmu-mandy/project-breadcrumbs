@@ -20,10 +20,10 @@ Also process data file into lines and split 80:20 for train:test.
 # author = "andersen"
 # author = "perrault"
 
-# authors_to_data = {"grimms": 'grimms.txt', "andersen": 'andersen.txt', "perrault": 'perrault.txt'}
-# author_data = authors_to_data[author]
+# authors_to_file = {"grimms": 'grimms.txt', "andersen": 'andersen.txt', "perrault": 'perrault.txt'}
+# author_file = authors_to_file[author]
 
-# author_data = pd.read_csv(author_data, sep=r' - (?={)', engine='python', header=None, names=['Line'])
+# author_data = pd.read_csv(author_file, sep=r' - (?={)', engine='python', header=None, names=['Line'])
 # author_lines = author_data['Line'].tolist()
 # train_cutoff_author = int(len(author_lines) * 0.8)
 
@@ -57,12 +57,15 @@ Concatenate author-specific data set with general fairy tale data.
 """
 
 # author = "grimms"
-# authors_to_data = {"grimms": 'data/grimms.txt', "andersen": 'data/andersen.txt', "perrault": 'data/perrault.txt'}
-# authors_to_data.pop(author)
+# authors_to_file = {"grimms": 'data/grimms.txt', "andersen": 'data/andersen.txt', "perrault": 'data/perrault.txt'}
+# authors_to_file.pop(author)
 
-# with open('bfb.txt', 'a') as outfile:
-#     for author in authors_to_data.values():
-#         with open(author) as infile:
+# files = ['data/combined.txt']
+# files.extend(authors_to_file.values())
+
+# with open('combined-with-authors.txt', 'w') as outfile:
+#     for file in files:
+#         with open(file) as infile:
 #             outfile.write(infile.read())
 
 """
