@@ -7,7 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1tusxZ4SKJY_sRhl4neXppIJ_i2NDEWf6
 
 This notebook uses GPT-2 from simpletransformers to generate fairy tale text. 
-For our general then author specific fine tuned model, the model is fine tuned on a general set of of fairy tales, excluding fairy tales from authors we will specifically use, then on the user-chosen author, and tested on fairy tale data from that specific author or a general fairy tale. 
+For our general then author-specific fine tuned model, the model is fine tuned on a general set of of fairy tales, excluding fairy tales from authors we will specifically use, then on the user-chosen author, and tested on fairy tale data from that specific author or a general fairy tale. 
 Adjustments to training and testing data are up to user preference.
 """
 
@@ -22,35 +22,41 @@ else:
     print('No GPU available, using the CPU instead.')
     device = torch.device('cpu')
 
-"""Uncomment the line for the author that you want to generate a language model for!
-(Note: Only one of the author lines should be uncommented)
-"""
+"""Select which author you would like to create the model based on. The model will be fine-tuned on a generic fairy tale dataset, then on this specific author."""
 
-author = "grimms"
-# author = "andersen"
-# author = "perrault"
+valid_authors = ["grimms", "andersen", "perrault"]
 
-authors_to_data = {"grimms": 'grimms.txt', "andersen": 'andersen.txt', "perrault": 'perrault.txt'}
-author_data = authors_to_data[author]
+while True:
+  author = input("Please select 'Andersen', 'Grimms', or 'Perrault'. ").lower()
+  if author in valid_authors:
+    break
+  print("Please enter a valid author.")
 
-"""Preprocess general and author specific fairy tale data and split each of datasets into 80% training and 20% testing"""
+authors_to_file = {"grimms": 'grimms.txt', "andersen": 'andersen.txt', "perrault": 'perrault.txt'}
+author_file = authors_to_file[author]
+
+"""Preprocess general and author-specific fairy tale data and split each of datasets into 80% training and 20% testing"""
 
 import pandas as pd
 
 # Concatenate author data (that is not from the chosen author) to our existing large fairy tale dataset
 
-authors_to_data.pop(author)
+authors_to_file.pop(author)
 
-with open('combined.txt', 'a') as outfile:
-    for author in authors_to_data.values():
-        with open(author) as infile:
+files = ['combined.txt']
+files.extend(authors_to_file.values())
+
+with open('combined-with-authors.txt', 'w') as outfile:
+    for file in files:
+        with open(file) as infile:
             outfile.write(infile.read())
 
-general_data = pd.read_csv('combined.txt', sep=r' - (?={)', engine='python', header=None, names=['Line'])
+general_data = pd.read_csv('combined-with-authors.txt', sep=r' - (?={)', engine='python', header=None, names=['Line'])
 general_lines = general_data['Line'].tolist()
-train_cutoff_general = int(len(general_lines) * 0.8)
 
 # Training data is the first 80% of the fairy tale data, testing is the last 20%
+train_cutoff_general = int(len(general_lines) * 0.8)
+
 with open('general_train.txt', 'w') as f:
    for line in general_lines[:-train_cutoff_general]:
        f.writelines(line + '\n')
@@ -60,8 +66,10 @@ with open('general_test.txt', 'w') as f:
        f.writelines(line + '\n')
 
 # Author-specific data
-author_data = pd.read_csv(author_data, sep=r' - (?={)', engine='python', header=None, names=['Line'])
+author_data = pd.read_csv(author_file, sep=r' - (?={)', engine='python', header=None, names=['Line'])
 author_lines = author_data['Line'].tolist()
+
+# Training data is the first 80% of the author-specific data, testing is the last 20%
 train_cutoff_author = int(len(author_lines) * 0.8)
 
 with open('author_specific_train.txt', 'w') as f:
@@ -72,7 +80,7 @@ with open('author_specific_test.txt', 'w') as f:
   for line in author_lines[-train_cutoff_author:]:
     f.writelines(line + '\n')
 
-"""Define GPT-2 model that is fine-tuned on general fairy tales then fine tuned
+"""Define GPT-2 model that is fine-tuned on general fairy tales then fine-tuned
 on specific author styles and evaluate it on the some test data.
 """
 
@@ -83,20 +91,27 @@ logging.basicConfig(level=logging.INFO)
 transformers_logger = logging.getLogger('transformers')
 transformers_logger.setLevel(logging.WARNING)
 
+# The last two arguments here make it so that checkpoints aren't saved, which is
+# useful for preserving memory. However, if you plan to load the model, you can
+# comment them out.
 train_args = {
     'reprocess_input_data': True,
     'overwrite_output_dir': True,
     'train_batch_size': 32,
-    'num_train_epochs': 5,
+    'num_train_epochs': 15,
     'mlm': False,
+    'save_eval_checkpoints': False,
+    'save_model_every_epoch': False,
 }
 
 # Create a GPT-2 model that is fine-tuned on fairy tale data.
 general_then_author_specific_fine_tuned_model = LanguageModelingModel('gpt2', 'gpt2', args=train_args)
 
+# First, fine-tune the model on the generic fairy tale dataset. Evaluate it on generic data as well.
 general_then_author_specific_fine_tuned_model.train_model('general_train.txt', eval_file='general_test.txt')
 general_then_author_specific_fine_tuned_model.eval_model('general_test.txt')
 
+# Then, fine-tune the model on the author-specific dataset. Evaluate it on author-specific data as well.
 general_then_author_specific_fine_tuned_model.train_model('author_specific_train.txt', eval_file='author_specific_test.txt')
 general_then_author_specific_fine_tuned_model.eval_model('author_specific_test.txt')
 
