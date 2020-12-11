@@ -7,8 +7,7 @@ Original file is located at
     https://colab.research.google.com/drive/1U3G-2k66gX1T3SAyfZtGNoZXXbhuZxtG
 
 This notebook uses GPT-2 from simpletransformers to generate fairy tale text. 
-For our author specific fine tuned model, the model is fine tuned on different authors, depending on user choice, and tested on fairy tale data from that specific author. Adjustments
-to training and testing data are up to user preference.
+For our author specific fine-tuned model, the model is fine-tuned on different authors, depending on user choice, and tested on fairy tale data from that specific author. Adjustments to training and testing data are up to user preference.
 """
 
 !pip install simpletransformers
@@ -22,22 +21,24 @@ else:
     print('No GPU available, using the CPU instead.')
     device = torch.device('cpu')
 
-"""Uncomment the line for the author that you want to generate a language model for!
-(Note: Only one of the author lines should be uncommented)
-"""
+"""Select which author you would like to create the model based on."""
 
-author = "grimms"
-# author = "andersen"
-# author = "perrault"
+valid_authors = ["grimms", "andersen", "perrault"]
 
-authors_to_data = {"grimms": 'grimms.txt', "andersen": 'andersen.txt', "perrault": 'perrault.txt'}
-author_data = authors_to_data[author]
+while True:
+  author = input("Please select 'Andersen', 'Grimms', or 'Perrault'. ").lower()
+  if author in valid_authors:
+    break
+  print("Please enter a valid author.")
+
+authors_to_file = {"grimms": 'grimms.txt', "andersen": 'andersen.txt', "perrault": 'perrault.txt'}
+author_file = authors_to_file[author]
 
 """Preprocess author specific fairy tale data and split data into 80% training and 20% testing."""
 
 import pandas as pd
 
-author_data = pd.read_csv(author_data, sep=r' - (?={)', engine='python', header=None, names=['Line'])
+author_data = pd.read_csv(author_file, sep=r' - (?={)', engine='python', header=None, names=['Line'])
 author_lines = author_data['Line'].tolist()
 train_cutoff_author = int(len(author_lines) * 0.8)
 
@@ -65,11 +66,11 @@ train_args = {
     'reprocess_input_data': True,
     'overwrite_output_dir': True,
     'train_batch_size': 32,
-    'num_train_epochs': 5,
+    'num_train_epochs': 15,
     'mlm': False,
 }
 
-# Create a GPT-2 model that is fine-tuned on fairy tale data of the specific author.
+# Create a GPT-2 model that is fine-tuned and evaluated on fairy tale data of the specific author.
 author_specific_fine_tuned_model = LanguageModelingModel('gpt2', 'gpt2', args=train_args)
 
 author_specific_fine_tuned_model.train_model('author_specific_train.txt', eval_file='author_specific_test.txt')
